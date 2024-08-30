@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revolt Time/Date Selection Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #f7f7f7;
+        }
+        header {
+            background-color: blue;
+            color: white;
+            padding: 10px;
+            font-size: 24px;
+        }
+        .container {
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            width: 300px;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .name {
+            margin: 10px 0;
+        }
+        input[type="text"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        .date, .time {
+            margin: 10px 0;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 10px;
+            background-color: #f2f2f2;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+        button.selected {
+            background-color: #008CBA;
+            color: white;
+        }
+        .btn-submit, .btn-cancel {
+            margin-top: 20px;
+            background: linear-gradient(90deg, #0072ff, #00c6ff);
+            color: black;
+            font-weight: bold;
+        }
+        .btn-cancel {
+            margin-bottom: 20px;
+        }
+        .thank-you-message {
+            margin-top: 50px;
+        }
+        .error-message {
+            color: red;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        Revolt Time/Date Selection Page
+    </header>
+
+    <div class="container" id="selection-form">
+        <div class="name">
+            <input type="text" id="username" placeholder="Enter your name">
+        </div>
+
+        <div class="date">
+            <p>Select a Date:</p>
+            <button onclick="selectDate('2024-09-02')">2nd September</button>
+            <button onclick="selectDate('2024-09-03')">3rd September</button>
+            <button onclick="selectDate('2024-09-04')">4th September</button>
+            <button onclick="selectDate('2024-09-05')">5th September</button>
+        </div>
+
+        <div class="time">
+            <p>Select a Time Slot:</p>
+            <button onclick="selectTime('3-5 PM')">3-5 PM</button>
+            <button onclick="selectTime('7-9 PM')">7-9 PM</button>
+            <button onclick="selectTime('10-12 AM')">10-12 AM</button>
+        </div>
+
+        <div class="btn-submit">
+            <button onclick="submitForm()">Submit</button>
+        </div>
+
+        <div class="btn-cancel">
+            <button onclick="cancelForm()">Cancel</button>
+        </div>
+
+        <div class="error-message" id="error-message">
+            Error: Form submission has been canceled.
+        </div>
+    </div>
+
+    <div class="container thank-you-message" id="thank-you-message" style="display: none;">
+        <h1>Thank you for selecting your slot</h1>
+        <p>Redirecting in <span id="countdown">4</span> seconds...</p>
+    </div>
+
+    <script>
+        let selectedDate = '';
+        let selectedTime = '';
+
+        function selectDate(date) {
+            selectedDate = date;
+            document.querySelectorAll('.date button').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+
+        function selectTime(time) {
+            selectedTime = time;
+            document.querySelectorAll('.time button').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+
+        function submitForm() {
+            const username = document.getElementById('username').value;
+            if (username === '' || selectedDate === '' || selectedTime === '') {
+                alert('Please fill in all fields.');
+                return;
+            }
+            document.getElementById('selection-form').style.display = 'none';
+            document.getElementById('thank-you-message').style.display = 'block';
+
+            let countdown = 4;
+            const countdownElement = document.getElementById('countdown');
+            const interval = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = countdown;
+                if (countdown === 0) {
+                    clearInterval(interval);
+                    showErrorPage();
+                }
+            }, 1000);
+        }
+
+        function cancelForm() {
+            document.getElementById('username').value = '';
+            selectedDate = '';
+            selectedTime = '';
+            document.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
+            document.getElementById('error-message').style.display = 'block';
+        }
+
+        function showErrorPage() {
+            document.getElementById('thank-you-message').innerHTML = `
+                <h1>Error: Something went wrong!</h1>
+                <p>Please try again later.</p>
+            `;
+        }
+    </script>
+
+</body>
+</html>
